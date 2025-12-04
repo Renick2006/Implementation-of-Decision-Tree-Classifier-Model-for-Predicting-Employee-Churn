@@ -24,61 +24,49 @@ RegisterNumber:  212224230227
 */
 ```
 ```
-import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+data=pd.read_csv('Employee.csv')
+data.head()
+data.info()
+data.isnull().sum()
+data["left"].value_counts()
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+data["salary"]=le.fit_transform(data["salary"])
+data.head()
+x=data[["satisfaction_level","last_evaluation","number_project","average_montly_hours","Work_accident","promotion_last_5years","salary"]]
+x.head()
+y=data["left"]
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score,classification_report,confusion_matrix
-from sklearn.preprocessing import StandardScaler
-df=pd.read_csv("heart (1).csv")
-print("Dataset Preview:")
-df.head()
-print("Missing Values:")
-df.isnull().sum()
-X=df.drop("target",axis=1)
-y=df["target"]
-X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=42)
-scaler=StandardScaler()
-X_train=scaler.fit_transform(X_train)
-X_test=scaler.transform(X_test)
-dt_model=DecisionTreeClassifier(random_state=42)
-dt_model=dt_model.fit(X_train,y_train)
-y_pred_dt=dt_model.predict(X_test)
-accuracy_dt=accuracy_score(y_test,y_pred_dt)
-print("\nDecision Tree Accuracy:",accuracy_dt)
-rf_model=RandomForestClassifier(n_estimators=100,random_state=42)
-rf_model.fit(X_train,y_train)
-y_pred_rf=rf_model.predict(X_test)
-accuracy_rf=accuracy_score(y_test,y_pred_rf)
-print("Random Forest Accuracy :",accuracy_rf)
-print("\nDecision Tree Classification Report : \n",classification_report(y_test,y_pred_dt))
-print("\nRandom Forest Classification Report : \n",classification_report(y_test,y_pred_rf))
-plt.figure(figsize=(12,5))
-plt.subplot(1,2,1)
-sns.heatmap(confusion_matrix(y_test,y_pred_dt),annot=True,fmt='d',cmap='Blues')
-plt.title('Decision Tree Confusion Matrix')
-
-plt.subplot(1,2,2)
-sns.heatmap(confusion_matrix(y_test,y_pred_rf),annot=True,fmt='d',cmap='Greens')
-plt.title("Random Forest Confusion Matrix")
-plt.show()
-if accuracy_rf>accuracy_dt:
-    print("Random Forest performs better than Decision Tree")
-else:
-    print("Decision Tree performs better than Random Forest")
+dt=DecisionTreeClassifier(criterion="entropy")
+dt.fit(x_train,y_train)
+y_pred=dt.predict(x_test)
+print(y_pred)
+from sklearn.metrics import accuracy_score,confusion_matrix,classification_report
+accuracy=accuracy_score(y_test,y_pred)
+confusion=confusion_matrix(y_test,y_pred)
+classification=classification_report(y_test,y_pred)
+print("accuracy",accuracy)
+print("confusion",confusion)
+print("classification",classification)
+dt.predict([[10,9,9,66,8,90,90]])
 ```
 
 ## Output:
-<img width="831" height="293" alt="Screenshot 2025-09-25 161641" src="https://github.com/user-attachments/assets/ea41d464-e89c-498f-a1e1-83361b303672" />
-<img width="184" height="410" alt="Screenshot 2025-09-25 161647" src="https://github.com/user-attachments/assets/5a1fd331-750d-486e-8236-fd7ee66838a8" />
-<img width="466" height="41" alt="Screenshot 2025-09-25 161654" src="https://github.com/user-attachments/assets/a95e4e65-2ea8-4656-88a7-322f9e1f4b0a" />
-<img width="489" height="44" alt="Screenshot 2025-09-25 161706" src="https://github.com/user-attachments/assets/d0b1f36d-f7f7-4039-ab76-6d5dc0550de3" />
-<img width="624" height="509" alt="Screenshot 2025-09-25 161714" src="https://github.com/user-attachments/assets/176fbe03-f744-4c6a-9b35-d58c2a9d9624" />
-<img width="1440" height="647" alt="Screenshot 2025-09-25 161727" src="https://github.com/user-attachments/assets/4f948913-6022-4e85-bc1f-d214a3ad1287" />
-<img width="533" height="25" alt="Screenshot 2025-09-25 161734" src="https://github.com/user-attachments/assets/29a0c6de-6b8c-4a1e-9e13-1e43d40773d2" />
+![WhatsApp Image 2025-11-11 at 00 30 45_1d60c9ac](https://github.com/user-attachments/assets/036093d5-dbd1-4cd2-9421-2acdb5b76ccf)
+![WhatsApp Image 2025-12-04 at 18 18 51_6f1b4c54](https://github.com/user-attachments/assets/ad6ecc7a-df60-4d93-bc27-c590ac3d4d75)
+![WhatsApp Image 2025-12-04 at 18 19 02_37c6cb77](https://github.com/user-attachments/assets/6b94818d-1b40-473f-8a3d-9c44a14acf8f)
+![WhatsApp Image 2025-12-04 at 18 19 16_abaa8b5a](https://github.com/user-attachments/assets/27563dc5-0d7e-4e2d-9883-d6a47f77b32a)
+![WhatsApp Image 2025-12-04 at 18 19 32_75ba2c8b](https://github.com/user-attachments/assets/f600d284-9c4e-43d2-85ae-90f1663923f6)
+![WhatsApp Image 2025-12-04 at 18 19 47_8b701268](https://github.com/user-attachments/assets/734cb496-8f9a-4a85-9f3b-a25a09160b0e)
+![WhatsApp Image 2025-12-04 at 18 20 04_49d56e14](https://github.com/user-attachments/assets/229a8d77-c46d-4fd2-8667-916eaad55f8d)
+![WhatsApp Image 2025-12-04 at 18 20 34_76ef1c79](https://github.com/user-attachments/assets/f8fd6589-6471-4c91-84b3-46ade2f3bfca)
+![WhatsApp Image 2025-12-04 at 18 20 51_a6d4d311](https://github.com/user-attachments/assets/6f310e26-fa61-4469-8329-610ebdf79bf4)
+![WhatsApp Image 2025-12-04 at 18 21 07_48226376](https://github.com/user-attachments/assets/ff76963c-33c5-4bcf-b053-829fd676c923)
+
+
 
 
 ## Result:
